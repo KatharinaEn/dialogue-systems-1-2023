@@ -26,7 +26,7 @@ const grammar: Grammar = {
     intent: "None",
     entities: { day: "Friday" },
   },
-  "at 10 in the morning": {
+  "at 10": {
     intent: "None",
     entities: { time: "10" },
   },
@@ -36,7 +36,7 @@ const grammar: Grammar = {
   },
   consert: {
     intent: "None",
-    entities: {evening: " classical consert"}, 
+    entities: {evening: "classical consert"}, 
   },
   brunch: {
     intent: "None",
@@ -50,15 +50,15 @@ const grammar: Grammar = {
     intent: "None",
     entities: {deny: "no"},
     },
-    "who is Zelenskyy": {
+    "person" : {
       intent: "None",
-      entities: {famousperson: "Zelenskyy"},
-    },
-    " i want to create a meeting": {
-      intent: "None",
-      entities: {start: "I want to create a meeting?"},
-    },
-  };
+      entities: { person: "Beyonce"},
+  },
+  "create a meeting": {
+    intent: "None",
+    entities: { start: "Let's create a meeting"},
+  }
+};
 
 const getEntity = (context: SDSContext, entity: string) => {
   // lowercase the utterance and remove tailing "."
@@ -81,11 +81,11 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
     },
     init: {
       on: {
-        TTS_READY: "Greeting",
-        CLICK: "Greeting",
+        TTS_READY: "meeting",
+        CLICK: "meeting",
       },
     },
-    Greeting: {
+    meeting: {
       initial: "prompt",
       on: {
         RECOGNISED: [
@@ -111,17 +111,15 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
       },
       states: {
         prompt: {
-          entry: say("Hi Katharina. What do you want to do today?"),
-          on: { ENDSPEECH: "ask" },
+          entry: say("Hi Katharina! What are your plans today?"),
+          on: {ENDSPEECH: "ask" },
         },
         ask: {
           entry: send("LISTEN"),
         },
         nomatch: {
-          entry: say(
-            "Sorry, I don't know what it is. Tell me something I know."
-          ),
-          on: { ENDSPEECH: "ask" },
+          entry: say("Sorry, can you repeat that?"),
+          on: { ENDSPEECH: "ask"},
         },
       },
     },
@@ -130,21 +128,21 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         type: "SPEAK",
         value: `${context.famousperson} is a politician`,
         })),
-      on: { ENDSPEECH: "confirmMeeting" },
+      on: { ENDSPEECH: "meeting_X" },
     },
-    confirmmeeting: {
+    meeting_X: {
       initial: "prompt",
       on: {
         RECOGNISED: [
           {
-            target: "wholeDay",
+            target: "whichday",
             cond: (context) => !!getEntity(context, "confirm"),
             actions: assign({
               confirm: (context) => getEntity(context, "confirm"),
             }),
           },
           {
-            target:"meetingTitleDateWholeDay",
+            target: "meeting",
             cond: (context) => !!getEntity(context, "deny"),
             actions: assign({
               deny: (context) => getEntity(context, "deny"),
@@ -158,33 +156,17 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
       },
       states: {
         prompt: {
-          entry: send((context) => ({
-            type: "SPEAK",
-            value: `Do you want to meet them?` 
-          })),
-          on: { ENDSPEECH: "ask" },
+          entry: say("Do you want to meet them?"),
+          on: {ENDSPEECH: "ask" },
         },
         ask: {
           entry: send("LISTEN"),
         },
         nomatch: {
-          entry: say(
-            "Sorry, I don't know what it is. Tell me something I know."
-          ),
-          on: { ENDSPEECH: "ask" },
+          entry: say("Sorry, I don't know what it is. Tell me something I know."),
+          on: {ENDSPEECH: "ask"},
         },
       },
-    },
-    yesmeeting: {
-      entry: send((context) => ({
-        type: "SPEAK",
-        value: `OK, meeting created` 
-      })),
-      on: { ENDSPEECH: "" },
-    },
-    nomeeting: {
-      entry: say("starting over"),
-      on: { ENDSPEECH: "welcome" },
     },
     welcome: {
       initial: "prompt",
@@ -224,14 +206,21 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         type: "SPEAK",
         value: `OK, ${context.title}`,
       })),
-      on: { ENDSPEECH: "Day" },
+      on: { ENDSPEECH: "whichday" },
     },
-    Day: {
+    dayinfo: {
+      entry: send((context) => ({
+        type: "SPEAK",
+        value: `OK, ${context.day}`,
+      })),
+      on: { ENDSPEECH: "wholeday" },
+    },
+    whichday: {
       initial: "prompt",
       on: {
         RECOGNISED: [
           {
-            target: "dayOfMeeting",
+            target: "repeatday",
             cond: (context) => !!getEntity(context, "day"),
             actions: assign({
               day: (context) => getEntity(context, "day"),
@@ -245,47 +234,38 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
       },
       states: {
         prompt: {
-          entry: say("what day is the meeting?"),
+          entry: say("On which day is the meeting?"),
           on: { ENDSPEECH: "ask" },
         },
         ask: {
           entry: send("LISTEN"),
         },
         nomatch: {
-          entry: say(
-            "Sorry, I don't know what it is. Tell me something I know."
-          ),
+          entry: say("Sorry, I don't know what it is. Tell me something I know."),
           on: { ENDSPEECH: "ask" },
         },
       },
     },
-    wantMeet: {
+    repeatday: {
       entry: send((context) => ({
         type: "SPEAK",
-        value: `OK, meeting with ${context.famousperson}`,
+        value: `OK, ${context.day}`,
       })),
-      on: { ENDSPEECH: "MeetingTime" },
+      on: { ENDSPEECH: "wholeday" },
     },
-    dayOfMeeting: {
-      entry: send((context) => ({
-        type: "SPEAK",
-        value: `OK, meeting with ${context.day}`,
-      })),
-      on: { ENDSPEECH: "MeetingTime" },
-    },
-    MeetingTime: {
+    wholeday: {
       initial: "prompt",
       on: {
         RECOGNISED: [
           {
-            target: "wholeDay",
+            target: "meetingtimenotspecific",
             cond: (context) => !!getEntity(context, "confirm"),
             actions: assign({
               confirm: (context) => getEntity(context, "confirm"),
             }),
           },
           {
-            target:"meetingTitleDateWholeDay",
+            target: "meetingtime",
             cond: (context) => !!getEntity(context, "deny"),
             actions: assign({
               deny: (context) => getEntity(context, "deny"),
@@ -313,73 +293,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
       },
     },
-    wholeDay: {
-      entry: send((context) => ({
-        type: "SPEAK",
-        value: `OK, whole day it is then.`, 
-      })),
-      on: { ENDSPEECH: "confirmmeeting" },
-    },
-    confirmMeeting: {
+    meetingtime: {
       initial: "prompt",
       on: {
         RECOGNISED: [
           {
-            target: "famouspersonyesmeeting",
-            cond: (context) => !!getEntity(context, "confirm"),
-            actions: assign({
-              confirm: (context) => getEntity(context, "confirm"),
-            }),
-          },
-          {
-            target:"famouspersonnomeeting",
-            cond: (context) => !!getEntity(context, "deny"),
-            actions: assign({
-              deny: (context) => getEntity(context, "deny"),
-            }),
-          },
-          {
-            target: ".nomatch",
-          },
-        ],
-        TIMEOUT: ".prompt",
-      },
-      states: {
-        prompt: {
-          entry: send((context) => ({
-            type: "SPEAK",
-            value: `Do you want me to create a meeting titled ${context.title}, on ${context.day} for the whole day?` 
-          })),
-          on: { ENDSPEECH: "ask" },
-        },
-        ask: {
-          entry: send("LISTEN"),
-        },
-        nomatch: {
-          entry: say(
-            "Sorry, I don't know what it is. Tell me something I know."
-          ),
-          on: { ENDSPEECH: "ask" },
-        },
-      },
-    },
-    famouspersonyesmeeting: {
-      entry: send((context) => ({
-        type: "SPEAK",
-        value: `OK, meeting created` 
-      })),
-      on: { ENDSPEECH: "Whichday" },
-    },
-    famouspersonnomeeting: {
-      entry: say("starting over"),
-      on: { ENDSPEECH: "init" },
-    },
-    meetingTitleDateWholeDay: {
-      initial: "prompt",
-      on: {
-        RECOGNISED: [
-          {
-            target: "meetingTitleDateTime_specific",
+            target: "meetingtime_specific",
             cond: (context) => !!getEntity(context, "time"),
             actions: assign({
               time: (context) => getEntity(context, "time"),
@@ -394,193 +313,110 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
       states: {
         prompt: {
           entry: say("What time is your meeting?"),
-          on: { ENDSPEECH: "ask" },
+          on: {ENDSPEECH: "ask" },
         },
         ask: {
           entry: send("LISTEN"),
         },
         nomatch: {
-          entry: say(
-            "Sorry, I don't know what it is. Tell me something I know."
-          ),
-          on: { ENDSPEECH: "ask" },
+          entry: say("Sorry, can you repeat that?"),
+          on: { ENDSPEECH: "ask"},
         },
       },
     },
-    Whichday: {
-      initial: "prompt",
-      on: {
-        RECOGNISED: [
-          {
-            target: "MeetingTime",
-            cond: (context) => !!getEntity(context, "MeetingTime"),
-            actions: assign({
-              meetingTime: (context) => getEntity(context, "MeetingTime"),
-            }),
-          },
-          {
-            target: "wantMeet",
-            cond: (context) => !!getEntity(context, "wantMeet"),
-            actions: assign({
-              wantmeet: (context) => getEntity(context, "wantMeet"),
-            }),
-          },
-          {
-            target: ".nomatch",
-          },
-        ],
-        TIMEOUT: ".prompt",
-      },
-      states: {
-        prompt: {
-          entry: say("On which day is it?"),
+    meetingtime_specific: {
+        initial: "prompt",
+        on: {
+          RECOGNISED: [
+            {
+              target: "created",
+              cond: (context) => !!getEntity(context, "confirm"),
+              actions: assign({
+                confirm: (context) => getEntity(context, "confirm"),
+              }),
+            },
+            {
+              target: "welcome",
+              cond: (context) => !!getEntity(context, "deny"),
+              actions: assign({
+                deny: (context) => getEntity(context, "deny"),
+              }),
+            },
+            {
+              target: ".nomatch",
+            },
+          ],
+          TIMEOUT: ".prompt",
+        },
+        states: {
+          prompt: {
+            entry: send((context) => ({
+              type: "SPEAK",
+              value: `Do you want me to create a meeting titled ${context.title}, on ${context.day}  at ${context.time}?`
+            })),
           on: { ENDSPEECH: "ask" },
-        },
-        ask: {
-          entry: send("LISTEN"),
-        },
-        nomatch: {
-          entry: say(
-            "Sorry, I don't know what it is. Tell me something I know."
-          ),
-          on: { ENDSPEECH: "ask" },
+          },
+          ask: {
+            entry: send("LISTEN"),
+          },
+          nomatch: {
+            entry: say(
+              "Sorry, I don't know what it is. Tell me something I know."
+            ),
+          },
         },
       },
-    },
-    whichDay: {
-      entry: send((context) => ({
-        type: "SPEAK",
-        value: `On which day is it?)`,
-        })),
-      on: { ENDSPEECH: "MeetingTime" },
-    },
-    meetingTitleDateTime_specific: {
-      entry: send((context) => ({
-        type: "SPEAK",
-        value: `Ok! meeting at ${context.time}`,
-      })),
-      on: { ENDSPEECH: "Confirmmeeting" },
-    }, 
-    Confirmmeeting: {
-      initial: "prompt",
-      on: {
-        RECOGNISED: [
-          {
-            target: "Yesmeeting",
-            cond: (context) => !!getEntity(context, "confirm"),
-            actions: assign({
-              confirm: (context) => getEntity(context, "confirm"),
-            }),
+      meetingtimenotspecific: {
+          initial: "prompt",
+          on: {
+            RECOGNISED: [
+              {
+                target: "created",
+                cond: (context) => !!getEntity(context, "confirm"),
+                actions: assign({
+                  confirm: (context) => getEntity(context, "confirm"),
+                }),
+              },
+              {
+                target: "meeting",
+                cond: (context) => !!getEntity(context, "deny"),
+                actions: assign({
+                  deny: (context) => getEntity(context, "deny"),
+                }),
+              },
+              {
+                target: ".nomatch",
+              },
+            ],
+            TIMEOUT: ".prompt",
           },
-          {
-            target:"Nomeeting",
-            cond: (context) => !!getEntity(context, "deny"),
-            actions: assign({
-              deny: (context) => getEntity(context, "deny"),
-            }),
+          states: {
+            prompt: {
+              entry: send((context) => ({
+                type: "SPEAK",
+                value: `Do you want me to create a meeting titled ${context.title}, on ${context.day}  for the whole day?`
+              })),
+              on: { ENDSPEECH: "ask" },
+            },
+            ask: {
+              entry: send("LISTEN"),
+            },
+            nomatch: {
+              entry: say(
+                "Sorry, I don't know what it is. Tell me something I know."
+              ),
+            },
           },
-          {
-            target: ".nomatch",
-          },
-        ],
-        TIMEOUT: ".prompt",
-      },
-      states: {
-        prompt: {
+        },
+        created: {
           entry: send((context) => ({
             type: "SPEAK",
-            value: `Do you want me to create a meeting titled ${context.title}, on ${context.day} at ${context.time}?` 
-          })),
-          on: { ENDSPEECH: "ask" },
-        },
-        ask: {
-          entry: send("LISTEN"),
-        },
-        nomatch: {
-          entry: say(
-            "Sorry, I don't know what it is. Tell me something I know."
-          ),
-          on: { ENDSPEECH: "ask" },
-        },
-      },
-    },
-    Yesmeeting: {
-      entry: send((context) => ({
-        type: "SPEAK",
-        value: `OK, meeting created` 
-      })),
-      on: { ENDSPEECH: "init" },
-    },
-    Nomeeting: {
-      entry: say("starting over"),
-      on: { ENDSPEECH: "welcome" },
-    },
-    meetingTitleDateTime: {
-      initial: "prompt",
-      on: {
-        RECOGNISED: [
-          {
-            target: "created",
-            cond: (context) => !!getEntity(context, "confirm"),
-            actions: assign({
-              confirm: (context) => getEntity(context, "confirm"),
-            }),
-          },
-          {
-            target: "welcome",
-            cond: (context) => !!getEntity(context, "deny"),
-            actions: assign({
-              deny: (context) => getEntity(context, "deny"),
-            }),
-          },
-          {
-            target: ".nomatch",
-          },
-        ],
-        TIMEOUT: ".prompt",
-      },
-      states: {
-        prompt: {
-          entry: send((context) => ({
-            type: "SPEAK",
-            value: `Do you want me to create a meeting titled ${context.title}, on ${context.day} for the whole day?`
+            value: `Your meeting has been created`,
           })),
         },
-        ask: {
-          entry: send("LISTEN"),
-        },
-        nomatch: {
-          entry: say(
-            "Sorry, I don't know what it is. Tell me something I know."
-          ),
-        },
       },
-    },
-    created: {
-      entry: send((context) => ({
-        type: "SPEAK",
-        value: `Your meeting has been created`,
-      })),
-      on: { ENDSPEECH: "welcome" },
-    },
-  },
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 
 const kbRequest = (text: string) =>
   fetch(
@@ -588,6 +424,27 @@ const kbRequest = (text: string) =>
       `https://cors.eu.org/https://api.duckduckgo.com/?q=${text}&format=json&skip_disambig=1`
     )
   ).then((data) => data.json())
-  
 
-      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const kbRequest = (text: string) =>
+//   fetch(
+//     new Request(
+//       `https://cors.eu.org/https://api.duckduckgo.com/?q=${text}&format=json&skip_disambig=1`
+//     )
+//   ).then((data) => data.json())

@@ -60,8 +60,10 @@ interface SDSContext {
   deny: any; 
   famousperson: any;
   start: any;
-  famousperson: any;
+  person: any;
   wantmeet: any;
+  creatingmeeting: any;
+  type: any;
 }
 
 type SDSEvent =
