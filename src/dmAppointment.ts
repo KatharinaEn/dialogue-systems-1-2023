@@ -98,9 +98,9 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           },
           {
             target: "who_is_it",
-            cond: (context) => !!getEntity(context, "famousperson"),
+            cond: (context) => !!getEntity(context, "person"),
             actions: assign({
-              famousperson: (context) => getEntity(context, "famousperson"),
+              person: (context) => getEntity(context, "person"),
             }),
           },
           {
@@ -126,7 +126,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
     who_is_it: {
       entry: send((context) => ({
         type: "SPEAK",
-        value: `${context.famousperson} is a politician`,
+        value: `${context.person} is a singer`,
         })),
       on: { ENDSPEECH: "meeting_X" },
     },
