@@ -64,6 +64,7 @@ interface SDSContext {
   wantmeet: any;
   creatingmeeting: any;
   type: any;
+  getentity1: any;
 }
 
 type SDSEvent =
