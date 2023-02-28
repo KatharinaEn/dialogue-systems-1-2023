@@ -1,0 +1,13 @@
+<!--ID=B7267351-473F-409D-9765-754A8EBCDE05;Version=1|{"VoiceNameToIdMapItems":[{"Name":"Microsoft Server Speech Text to Speech Voice (en-US, JennyNeural)","ShortName":"en-US-JennyNeural","Locale":"en-US","Id":"e5e4f59b-65c6-42b2-a6e3-5985d1a1ea07","VoiceType":"StandardVoice"},{"Name":"Microsoft Server Speech Text to Speech Voice (en-US, DavisNeural)","ShortName":"en-US-DavisNeural","Locale":"en-US","Id":"b5f86142-ce84-4483-8142-45db0d778add","VoiceType":"StandardVoice"}]}-->
+<!--ID=5B95B1CC-2C7B-494F-B746-CF22A0E779B7;Version=1|{"Locales":{"en-US":{"AutoApplyCustomLexiconFiles":[{}]}}}-->
+<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" xml:lang="en-US"><voice name="en-US-JennyNeural"><s /><mstts:express-as style="friendly">I have your calendar open<break strength="medium" /></mstts:express-as><s /></voice>
+<voice name="en-US-DavisNeural"><s /><mstts:express-as style="friendly">I'd like to schedule an appointment<break strength="medium" /></mstts:express-as><s /></voice>
+<voice name="en-US-JennyNeural"><s /><mstts:express-as style="friendly">For what date?<break strength="medium" /></mstts:express-as><s /></voice>
+<voice name="en-US-DavisNeural"><s /><mstts:express-as style="friendly">March 1st<break strength="medium" /></mstts:express-as><s /></voice>
+<voice name="en-US-JennyNeural"><s /><mstts:express-as style="friendly">What time would you like to start?<break strength="medium" /></mstts:express-as><s /></voice>
+<voice name="en-US-DavisNeural"><s /><mstts:express-as style="friendly">2 PM<break strength="medium" /></mstts:express-as><s /></voice>
+<voice name="en-US-JennyNeural"><s /><mstts:express-as style="friendly">How much time do you want to block out?<break strength="medium" /></mstts:express-as><s /></voice>
+<voice name="en-US-DavisNeural"><s /><mstts:express-as style="friendly">1 hour <break strength="medium" /></mstts:express-as><s /></voice>
+<voice name="en-US-JennyNeural"><s /><mstts:express-as style="friendly">What shall we call it?<break strength="medium" /></mstts:express-as><s /></voice>
+<voice name="en-US-DavisNeural"><s /><mstts:express-as style="friendly">Lunch appointment<break strength="medium" /></mstts:express-as><s /></voice>
+<voice name="en-US-JennyNeural"><s /><mstts:express-as style="excited">Ok, so here is a summary for you: You have a lunch appointment on March 1st at 2 PM for 1 hour.</mstts:express-as><s /></voice></speak>

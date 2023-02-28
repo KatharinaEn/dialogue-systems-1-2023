@@ -1,0 +1,67 @@
+﻿File Name,Plain text,SSML
+lab3PartANew,"I have your calendar open
+I'd like to schedule an appointment
+For what date?
+March 1st
+What time would you like to start?
+2 PM
+How much time do you want to block out?
+1 hour 
+What shall we call it?
+Lunch appointment
+Ok, so here is a summary for you: You have a lunch appointment on March 1st at 2 PM for 1 hour.","<!--ID=B7267351-473F-409D-9765-754A8EBCDE05;Version=1|{""VoiceNameToIdMapItems"":[{""Name"":""Microsoft Server Speech Text to Speech Voice (en-US, JennyNeural)"",""ShortName"":""en-US-JennyNeural"",""Locale"":""en-US"",""Id"":""e5e4f59b-65c6-42b2-a6e3-5985d1a1ea07"",""VoiceType"":""StandardVoice""},{""Name"":""Microsoft Server Speech Text to Speech Voice (en-US, DavisNeural)"",""ShortName"":""en-US-DavisNeural"",""Locale"":""en-US"",""Id"":""b5f86142-ce84-4483-8142-45db0d778add"",""VoiceType"":""StandardVoice""}]}-->
+<!--ID=5B95B1CC-2C7B-494F-B746-CF22A0E779B7;Version=1|{""Locales"":{""en-US"":{""AutoApplyCustomLexiconFiles"":[{}]}}}-->
+<speak version=""1.0"" xmlns=""http://www.w3.org/2001/10/synthesis"" xmlns:mstts=""http://www.w3.org/2001/mstts"" xmlns:emo=""http://www.w3.org/2009/10/emotionml"" xml:lang=""en-US""><voice name=""en-US-JennyNeural""><s /><mstts:express-as style=""friendly"">I have your calendar open<break strength=""medium"" /></mstts:express-as><s /></voice>
+<voice name=""en-US-DavisNeural""><s /><mstts:express-as style=""friendly"">I'd like to schedule an appointment<break strength=""medium"" /></mstts:express-as><s /></voice>
+<voice name=""en-US-JennyNeural""><s /><mstts:express-as style=""friendly"">For what date?<break strength=""medium"" /></mstts:express-as><s /></voice>
+<voice name=""en-US-DavisNeural""><s /><mstts:express-as style=""friendly"">March 1st<break strength=""medium"" /></mstts:express-as><s /></voice>
+<voice name=""en-US-JennyNeural""><s /><mstts:express-as style=""friendly"">What time would you like to start?<break strength=""medium"" /></mstts:express-as><s /></voice>
+<voice name=""en-US-DavisNeural""><s /><mstts:express-as style=""friendly"">2 PM<break strength=""medium"" /></mstts:express-as><s /></voice>
+<voice name=""en-US-JennyNeural""><s /><mstts:express-as style=""friendly"">How much time do you want to block out?<break strength=""medium"" /></mstts:express-as><s /></voice>
+<voice name=""en-US-DavisNeural""><s /><mstts:express-as style=""friendly"">1 hour <break strength=""medium"" /></mstts:express-as><s /></voice>
+<voice name=""en-US-JennyNeural""><s /><mstts:express-as style=""friendly"">What shall we call it?<break strength=""medium"" /></mstts:express-as><s /></voice>
+<voice name=""en-US-DavisNeural""><s /><mstts:express-as style=""friendly"">Lunch appointment<break strength=""medium"" /></mstts:express-as><s /></voice>
+<voice name=""en-US-JennyNeural""><s /><mstts:express-as style=""excited"">Ok, so here is a summary for you: You have a lunch appointment on March 1st at 2 PM for 1 hour.</mstts:express-as><s /></voice></speak>"
+lab3PartB,"Hi Katharina. Let's create a meeting. What is it about?
+Who is Beyonce
+Beyoncé Giselle Knowles-Carter (born September 4, 1981) is an American singer, songwriter, actress, and dancer. Beyoncé has been noted for her boundary-pushing artistry and her vocal ability. Her success has made her a cultural icon and earned her the nickname ""Queen Bey"". 
+Do you want to meet them?
+Yes
+On which day is it?
+On Friday.
+Will it take the whole day? 
+No
+What time is your meeting?
+At 10
+Do you want me to create a meeting with Beyonce on Friday at 10?
+Yes ","<!--ID=B7267351-473F-409D-9765-754A8EBCDE05;Version=1|{""VoiceNameToIdMapItems"":[{""Name"":""Microsoft Server Speech Text to Speech Voice (en-US, JennyNeural)"",""ShortName"":""en-US-JennyNeural"",""Locale"":""en-US"",""Id"":""e5e4f59b-65c6-42b2-a6e3-5985d1a1ea07"",""VoiceType"":""StandardVoice""},{""Name"":""Microsoft Server Speech Text to Speech Voice (en-US, AriaNeural)"",""ShortName"":""en-US-AriaNeural"",""Locale"":""en-US"",""Id"":""27e2f1c8-cfe0-4324-88e2-cd0bafeffe1b"",""VoiceType"":""StandardVoice""}]}-->
+<!--ID=FCB40C2B-1F9F-4C26-B1A1-CF8E67BE07D1;Version=1|{""Files"":{""4c2a747b-d3aa-4a3e-ad18-735e82375598"":{""FileKind"":""CustomLexiconFile"",""FileSubKind"":""CustomLexiconFile"",""Uri"":""https://cvoiceprodneu.blob.core.windows.net/acc-public-files/4c5e45852ac342888db93e1d8a74e4c9/f7d87315-2103-46c8-9ac5-c12312bea3ef.xml""}}}-->
+<!--ID=5B95B1CC-2C7B-494F-B746-CF22A0E779B7;Version=1|{""Locales"":{""en-US"":{""AutoApplyCustomLexiconFiles"":[{""FileId"":""4c2a747b-d3aa-4a3e-ad18-735e82375598""}]}}}-->
+<speak version=""1.0"" xmlns=""http://www.w3.org/2001/10/synthesis"" xmlns:mstts=""http://www.w3.org/2001/mstts"" xmlns:emo=""http://www.w3.org/2009/10/emotionml"" xml:lang=""en-US""><voice name=""en-US-JennyNeural""><lexicon uri=""https://cvoiceprodneu.blob.core.windows.net/acc-public-files/4c5e45852ac342888db93e1d8a74e4c9/f7d87315-2103-46c8-9ac5-c12312bea3ef.xml"" /><s /><mstts:express-as style=""friendly"">Hi Katharina. Let's create a meeting. What is it about?</mstts:express-as><s /></voice>
+<voice name=""en-US-AriaNeural""><lexicon uri=""https://cvoiceprodneu.blob.core.windows.net/acc-public-files/4c5e45852ac342888db93e1d8a74e4c9/f7d87315-2103-46c8-9ac5-c12312bea3ef.xml"" /><s /><mstts:express-as style=""friendly"">Who is Beyonce</mstts:express-as><s /></voice>
+<voice name=""en-US-JennyNeural""><lexicon uri=""https://cvoiceprodneu.blob.core.windows.net/acc-public-files/4c5e45852ac342888db93e1d8a74e4c9/f7d87315-2103-46c8-9ac5-c12312bea3ef.xml"" /><s /><mstts:express-as style=""friendly"">Beyoncé Giselle Knowles-Carter (born September 4, 1981) is an American singer, songwriter, actress, and dancer. Beyoncé has been noted for her boundary-pushing artistry and her vocal ability. Her success has made her a cultural icon and earned her the nickname ""Queen Bey"". </mstts:express-as></voice>
+<voice name=""en-US-JennyNeural""><lexicon uri=""https://cvoiceprodneu.blob.core.windows.net/acc-public-files/4c5e45852ac342888db93e1d8a74e4c9/f7d87315-2103-46c8-9ac5-c12312bea3ef.xml"" /><s /><mstts:express-as style=""hopeful"">Do you want to meet them?</mstts:express-as><s /></voice>
+<voice name=""en-US-AriaNeural""><lexicon uri=""https://cvoiceprodneu.blob.core.windows.net/acc-public-files/4c5e45852ac342888db93e1d8a74e4c9/f7d87315-2103-46c8-9ac5-c12312bea3ef.xml"" /><s /><mstts:express-as style=""excited"">Yes</mstts:express-as><s /></voice>
+<voice name=""en-US-JennyNeural""><lexicon uri=""https://cvoiceprodneu.blob.core.windows.net/acc-public-files/4c5e45852ac342888db93e1d8a74e4c9/f7d87315-2103-46c8-9ac5-c12312bea3ef.xml"" /><s /><mstts:express-as style=""friendly"">On which day is it?</mstts:express-as><s /></voice>
+<voice name=""en-US-AriaNeural""><lexicon uri=""https://cvoiceprodneu.blob.core.windows.net/acc-public-files/4c5e45852ac342888db93e1d8a74e4c9/f7d87315-2103-46c8-9ac5-c12312bea3ef.xml"" /><s /><mstts:express-as style=""excited"">On Friday.</mstts:express-as><s /></voice>
+<voice name=""en-US-JennyNeural""><lexicon uri=""https://cvoiceprodneu.blob.core.windows.net/acc-public-files/4c5e45852ac342888db93e1d8a74e4c9/f7d87315-2103-46c8-9ac5-c12312bea3ef.xml"" /><s /><mstts:express-as style=""friendly"">Will it take the whole day? </mstts:express-as><s /></voice>
+<voice name=""en-US-AriaNeural""><lexicon uri=""https://cvoiceprodneu.blob.core.windows.net/acc-public-files/4c5e45852ac342888db93e1d8a74e4c9/f7d87315-2103-46c8-9ac5-c12312bea3ef.xml"" /><s /><mstts:express-as style=""sad"">No</mstts:express-as><s /></voice>
+<voice name=""en-US-JennyNeural""><lexicon uri=""https://cvoiceprodneu.blob.core.windows.net/acc-public-files/4c5e45852ac342888db93e1d8a74e4c9/f7d87315-2103-46c8-9ac5-c12312bea3ef.xml"" /><s /><mstts:express-as style=""friendly"">What time is your meeting?</mstts:express-as><s /></voice>
+<voice name=""en-US-AriaNeural""><lexicon uri=""https://cvoiceprodneu.blob.core.windows.net/acc-public-files/4c5e45852ac342888db93e1d8a74e4c9/f7d87315-2103-46c8-9ac5-c12312bea3ef.xml"" /><s /><mstts:express-as style=""friendly"">At 10</mstts:express-as><s /></voice>
+<voice name=""en-US-JennyNeural""><lexicon uri=""https://cvoiceprodneu.blob.core.windows.net/acc-public-files/4c5e45852ac342888db93e1d8a74e4c9/f7d87315-2103-46c8-9ac5-c12312bea3ef.xml"" /><s /><mstts:express-as style=""friendly"">Do you want me to create a meeting with Beyonce on Friday at 10?</mstts:express-as><s /></voice>
+<voice name=""en-US-AriaNeural""><lexicon uri=""https://cvoiceprodneu.blob.core.windows.net/acc-public-files/4c5e45852ac342888db93e1d8a74e4c9/f7d87315-2103-46c8-9ac5-c12312bea3ef.xml"" /><s /><mstts:express-as style=""excited"">Yes </mstts:express-as><s /></voice></speak>"
+lab3PartC,"Eines Tages, Baby, werden wir alt sein, oh Baby, werden wir alt sein
+und an all die Geschichten denken, die wir hätten erzählen können. 
+Ich, ich bin der Meister der Streiche, wenn´s um Selbstbetrug geht.
+Bin ein Kleinkind vom Feinsten, wenn ich vor Aufgaben steh´.
+Bin ein entschleunigtes Teilchen.
+Kann auf Keinsten was reißen.
+Lass´ mich begeistern für Leichtsinn, wenn ein anderer ihn lebt.","<!--ID=B7267351-473F-409D-9765-754A8EBCDE05;Version=1|{""VoiceNameToIdMapItems"":[{""Name"":""Microsoft Server Speech Text to Speech Voice (de-DE, AmalaNeural)"",""ShortName"":""de-DE-AmalaNeural"",""Locale"":""de-DE"",""Id"":""c87ed4d5-30e1-43c7-9d21-1f61797fc706"",""VoiceType"":""StandardVoice""}]}-->
+<!--ID=5B95B1CC-2C7B-494F-B746-CF22A0E779B7;Version=1|{""Locales"":{""en-US"":{""AutoApplyCustomLexiconFiles"":[{}]},""de-DE"":{""AutoApplyCustomLexiconFiles"":[{}]}}}-->
+<speak version=""1.0"" xmlns=""http://www.w3.org/2001/10/synthesis"" xmlns:mstts=""http://www.w3.org/2001/mstts"" xmlns:emo=""http://www.w3.org/2009/10/emotionml"" xml:lang=""de-DE""><voice name=""de-DE-AmalaNeural""><break strength=""weak"" />Eines Tages, <break strength=""strong"" />Baby, <break strength=""weak"" />werden wir alt sein<break strength=""weak"" />,<prosody rate=""+50.00%""> oh Baby, werden wir alt sein</prosody></voice>
+<voice name=""de-DE-AmalaNeural""><prosody rate=""+50.00%"">und an all die Geschichten denken, die wir hätten erzählen können. </prosody><prosody rate=""+500.00%""><break strength=""weak"" /></prosody></voice>
+<voice name=""de-DE-AmalaNeural""><prosody volume=""+50.00%"" pitch=""+30.00%"">Ich</prosody>, <break strength=""weak"" />ich bin der<prosody volume=""+50.00%"" pitch=""+30.00%""> Meister der Streiche</prosody><prosody volume=""+50.00%"">,</prosody><break strength=""weak"" /> wenn´s um Selbstbetrug geht.</voice>
+<voice name=""de-DE-AmalaNeural"">Bin ein Kleinkind vom Feinsten, wenn ich vor Aufgaben steh´.</voice>
+<voice name=""de-DE-AmalaNeural"">Bin ein entschleunigtes Teilchen.</voice>
+<voice name=""de-DE-AmalaNeural"">Kann auf Keinsten was reißen.</voice>
+<voice name=""de-DE-AmalaNeural"">Lass´ mich <prosody volume=""+50.00%"" pitch=""+30.00%"">begeistern für Leichtsinn</prosody><prosody pitch=""+30.00%"">,</prosody><break strength=""weak"" /> wenn<break strength=""medium"" /> ein anderer ihn lebt.<break strength=""medium"" /></voice></speak>"
