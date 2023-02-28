@@ -34,6 +34,12 @@ interface ChatInput {
   text: string;
 }
 
+interface ChatInput {
+  past_user_inputs: string[];
+  generated_responses: string[];
+  text: string;
+}
+
 interface SDSContext {
   parameters: Parameters;
   asr: SpeechRecognition;
@@ -47,24 +53,7 @@ interface SDSContext {
   audioCtx: any;
 
   title: any;
-  time: any;
-  day: any;
-  wholeDay: any;
-  meeting: any;
-  meetingTitleDateTime: any;
-  meetingTitleDateWholeDay: any; 
-  meetingTitleDateTime: any;
-  meetingTitleDayWholeDay: any;
-  meetingTime: any;
-  confirm: any;
-  deny: any; 
-  famousperson: any;
-  start: any;
-  person: any;
-  wantmeet: any;
-  creatingmeeting: any;
-  type: any;
-  getentity1: any;
+  topic: string;
 }
 
 type SDSEvent =

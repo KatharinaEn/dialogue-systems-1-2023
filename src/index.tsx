@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === "development") {
   });
 }
 
-const defaultPassivity = 10;
+const defaultPassivity = 5;
 
 const machine = createMachine(
   {
@@ -301,7 +301,7 @@ function App({ domElement }: any) {
         /* console.log('Ready to receive a voice input.'); */
       },
       recStop: (context) => {
-        context.asr.abort();
+        context.asr.abort?.();
         /* console.log('Recognition stopped.'); */
       },
       ttsStart: (context) => {

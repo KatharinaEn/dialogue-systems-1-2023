@@ -1,0 +1,9 @@
+<!--ID=B7267351-473F-409D-9765-754A8EBCDE05;Version=1|{"VoiceNameToIdMapItems":[{"Name":"Microsoft Server Speech Text to Speech Voice (de-DE, AmalaNeural)","ShortName":"de-DE-AmalaNeural","Locale":"de-DE","Id":"c87ed4d5-30e1-43c7-9d21-1f61797fc706","VoiceType":"StandardVoice"}]}-->
+<!--ID=5B95B1CC-2C7B-494F-B746-CF22A0E779B7;Version=1|{"Locales":{"en-US":{"AutoApplyCustomLexiconFiles":[{}]},"de-DE":{"AutoApplyCustomLexiconFiles":[{}]}}}-->
+<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" xml:lang="de-DE"><voice name="de-DE-AmalaNeural"><break strength="weak" />Eines Tages, <break strength="strong" />Baby, <break strength="weak" />werden wir alt sein<break strength="weak" />,<prosody rate="+50.00%"> oh Baby, werden wir alt sein</prosody></voice>
+<voice name="de-DE-AmalaNeural"><prosody rate="+50.00%">und an all die Geschichten denken, die wir hätten erzählen können. </prosody><prosody rate="+500.00%"><break strength="weak" /></prosody></voice>
+<voice name="de-DE-AmalaNeural"><prosody volume="+50.00%" pitch="+30.00%">Ich</prosody>, <break strength="weak" />ich bin der<prosody volume="+50.00%" pitch="+30.00%"> Meister der Streiche</prosody><prosody volume="+50.00%">,</prosody><break strength="weak" /> wenn´s um Selbstbetrug geht.</voice>
+<voice name="de-DE-AmalaNeural">Bin ein Kleinkind vom Feinsten, wenn ich vor Aufgaben steh´.</voice>
+<voice name="de-DE-AmalaNeural">Bin ein entschleunigtes Teilchen.</voice>
+<voice name="de-DE-AmalaNeural">Kann auf Keinsten was reißen.</voice>
+<voice name="de-DE-AmalaNeural">Lass´ mich <prosody volume="+50.00%" pitch="+30.00%">begeistern für Leichtsinn</prosody><prosody pitch="+30.00%">,</prosody><break strength="weak" /> wenn<break strength="medium" /> ein anderer ihn lebt.<break strength="medium" /></voice></speak>
