@@ -1,20 +1,19 @@
-import { getEnabledCategories } from "trace_events";
 import { MachineConfig, send, Action, assign } from "xstate";
 
 function say(text: string): Action<SDSContext, SDSEvent> {
   return send((_context: SDSContext) => ({ type: "SPEAK", value: text }));
-};
+}
 
-/*interface grammar {
+interface Grammar {
   [index: string]: {
     intent: string;
     entities: {
       [index: string]: string;
     };
   };
-}*/
+}
 
-/*const grammar: grammar = {
+const grammar: Grammar = {
   lecture: {
     intent: "None",
     entities: { title: "Dialogue systems lecture" },
@@ -33,11 +32,11 @@ function say(text: string): Action<SDSContext, SDSEvent> {
   },
   training: {
     intent: "None",
-    entities: { day: "training"},
+    entities: { title: "training"},
   },
-  consert: {
+  concert: {
     intent: "None",
-    entities: {evening: "classical consert"}, 
+    entities: {title: "classical concert"}, 
   },
   brunch: {
     intent: "None",
@@ -58,62 +57,23 @@ function say(text: string): Action<SDSContext, SDSEvent> {
   "create a meeting": {
     intent: "None",
     entities: { start: "Let's create a meeting"},
-  }
-};*/
+  },
+  "ask a celebrity question": {
+    intent: "None",
+    entities: { person: "Ok, who is it?"},
+},
+};
 
 const getEntity = (context: SDSContext, entity: string) => {
-  console.log('nluResult:');
-  console.log(context.nluResult)
-  /*let u = context.recResult[0].utterance.toLowerCase().replace(/\.$/g, "");*/
-  return context.nluResult.prediction.intents[0].category
-}; 
-
-const getEntity1 = (context: SDSContext, entity: string) => {
-  console.log('nluResult:');
-  console.log(context.nluResult);
-  const getEntity1 = (context: SDSContext, entity: string) => {
-    console.log('nluResult:');
-    console.log(context.nluResult);
-    if (context.nluResult.prediction.entities[0] === 0) {
-    console.log(say("Sorry, can you repeat what you said?"));
-    return ".meeting";
-  }
-  else if (context.nluResult.prediction.entities.length > 0) {
-   return ".whichday";
-  }
-};
-   
-}
-  
-
-// if (context.nluResult.prediction.entities[0] === 0) {
-//   console.log(say("Sorry, can you repeat what you said?"));
-//   return {
-//     newState: ".meeting",
-//     data: null
-//   };
-// } else if (context.nluResult.prediction.entities.length > 0) {
-//   return {
-//     newState: ".whichday",
-//     data: null 
-//   };
-// }
-// };
-
-
-//if(nluResult.prediction.entities.length > 0) { // do something with nluResult.prediction.entities[0] }
-
   // lowercase the utterance and remove tailing "."
-  /*let u = context.recResult[0].utterance.toLowerCase().replace(/\.$/g, "");
+  let u = context.recResult[0].utterance.toLowerCase().replace(/\.$/g, "");
   if (u in grammar) {
-    if (entity in grammar[u].entities)
-   {
+    if (entity in grammar[u].entities) {
       return grammar[u].entities[entity];
     }
   }
-};*/
-
-
+  return false;
+};
 
 export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
   initial: "idle",
@@ -135,11 +95,17 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         RECOGNISED: [
           {
             target: "welcome",
-            cond: (context) => getEntity(context) === "create a meeting",
+            cond: (context) => !!getEntity(context, "start"),
+            actions: assign({
+              start: (context) => getEntity(context, "start"),
+            }),
           },
           {
-            target: "who_is_it",
-            cond: (context) => getEntity(context) === "ask_celebrity",
+            target: "person",
+            cond: (context) => !!getEntity(context, "person"),
+            actions: assign({
+              person: (context) => getEntity(context, "person"),
+            }),
           },
           {
             target: ".nomatch",
@@ -161,24 +127,88 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
       },
     },
-    who_is_it: {
-      entry: send((context) => ({
-        type: "SPEAK",
-        value: `${context.person} is a singer`,
-        })),
-      on: { ENDSPEECH: "meeting_X" },
+    person: {
+      id:"who_is_it",
+      initial: "prompt",
+      on: {
+        RECOGNISED: [
+          {
+            target: ".information",
+            actions: assign({type: context => {return context.recResult[0].utterance},
+            }),
+          },
+          {
+            target: ".nomatch",
+          },
+        ],
+        TIMEOUT: ".prompt",
+      },
+      states: {
+        information: {
+          invoke: {
+            id: 'getInformation',
+            src: (context, event) => kbRequest(context.title),
+            onDone: [{
+              target: 'success',
+              cond: (context, event) => event.data.Abstract !== "",
+              actions: assign({ information: (context, event) => event.data })
+            },
+            {
+              target: 'failure',
+            },
+          ],
+            onError: {
+              target: 'failure',
+            }
+          }
+        },
+        success: {
+          entry: send((context) => ({
+            type: "SPEAK",
+            value: `The info I found about this person is as follows: ${context.information.Abstract}`
+          })),
+          on: {ENDSPEECH: "#meeting_X"},
+        },
+        failure: {
+          entry: send((context) => ({
+            type: "SPEAK",
+            value: `Sorry, I don't know who that is. Tell me something I know.`
+          })),
+          on: {ENDSPEECH: "ask"},
+        },
+        prompt: {
+          entry: say("Which celebrity do you want to know more about?"),
+          on: { ENDSPEECH: "ask" },
+        },
+        ask: {
+          entry: send("LISTEN"),
+        },
+        nomatch: {
+          entry: say(
+            "Sorry, I don't know what it is. Tell me something I know."
+          ),
+          on: { ENDSPEECH: "ask" },
+        },
+      },
     },
     meeting_X: {
+      id: "meeting_X",
       initial: "prompt",
       on: {
         RECOGNISED: [
           {
             target: "whichday",
-            cond: (context) => getEntity(context) === "who_is_it",
+            cond: (context) => !!getEntity(context, "confirm"),
+            actions: assign({
+              confirm: (context) => getEntity(context, "confirm"),
+            }),
           },
           {
             target: "meeting",
-            cond: (context) => getEntity(context) === "negative",
+            cond: (context) => !!getEntity(context, "deny"),
+            actions: assign({
+              deny: (context) => getEntity(context, "deny"),
+            }),
           },
           {
             target: ".nomatch",
@@ -206,9 +236,9 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         RECOGNISED: [
           {
             target: "info",
-            cond: (context) => getEntity(context) === "meeting",
+            cond: (context) => !!getEntity(context, "title"),
             actions: assign({
-              title: (context) => getEntity1(context, "title"),
+              title: (context) => getEntity(context, "title"),
             }),
           },
           {
@@ -253,9 +283,9 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         RECOGNISED: [
           {
             target: "repeatday",
-            cond: (context) => getEntity(context) === "day_of_meeting",
+            cond: (context) => !!getEntity(context, "day"),
             actions: assign({
-              day: (context) => getEntity1(context, "day"),
+              day: (context) => getEntity(context, "day"),
             }),
           },
           {
@@ -291,11 +321,17 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         RECOGNISED: [
           {
             target: "meetingtimenotspecific",
-            cond: (context) => getEntity(context) === "positive",
+            cond: (context) => !!getEntity(context, "confirm"),
+            actions: assign({
+              confirm: (context) => getEntity(context, "confirm"),
+            }),
           },
           {
             target: "meetingtime",
-            cond: (context) => getEntity(context) === "negative",
+            cond: (context) => !!getEntity(context, "deny"),
+            actions: assign({
+              deny: (context) => getEntity(context, "deny"),
+            }),
           },
           {
             target: ".nomatch",
@@ -325,9 +361,9 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         RECOGNISED: [
           {
             target: "meetingtime_specific",
-            cond: (context) => getEntity(context) === "time_of_meeting",
+            cond: (context) => !!getEntity(context, "time"),
             actions: assign({
-              time: (context) => getEntity1(context, "time"),
+              time: (context) => getEntity(context, "time"),
             }),
           },
           {
@@ -356,11 +392,17 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           RECOGNISED: [
             {
               target: "created",
-              cond: (context) => getEntity(context) === "positive",
+              cond: (context) => !!getEntity(context, "confirm"),
+              actions: assign({
+                confirm: (context) => getEntity(context, "confirm"),
+              }),
             },
             {
               target: "welcome",
-              cond: (context) => getEntity(context) === "negative",
+              cond: (context) => !!getEntity(context, "deny"),
+              actions: assign({
+                deny: (context) => getEntity(context, "deny"),
+              }),
             },
             {
               target: ".nomatch",
@@ -392,11 +434,17 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             RECOGNISED: [
               {
                 target: "created",
-                cond: (context) => getEntity(context) === "positive",
+                cond: (context) => !!getEntity(context, "confirm"),
+                actions: assign({
+                  confirm: (context) => getEntity(context, "confirm"),
+                }),
               },
               {
                 target: "meeting",
-                cond: (context) => getEntity(context) === "negative",
+                cond: (context) => !!getEntity(context, "deny"),
+                actions: assign({
+                  deny: (context) => getEntity(context, "deny"),
+                }),
               },
               {
                 target: ".nomatch",
@@ -430,14 +478,16 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
       },
 };
+  
+
     
 
-/*const kbRequest = (text: string) =>
-  fetch(
-    new Request(
-      `https://cors.eu.org/https://api.duckduckgo.com/?q=${text}&format=json&skip_disambig=1`
-    )
-  ).then((data) => data.json())
+    const kbRequest = (text: string) =>
+    fetch(
+      new Request(
+        `https://cors.eu.org/https://api.duckduckgo.com/?q=${text}&format=json&skip_disambig=1`
+      )
+    ).then((data) => data.json());
 
 
 
@@ -461,4 +511,4 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
 //     new Request(
 //       `https://cors.eu.org/https://api.duckduckgo.com/?q=${text}&format=json&skip_disambig=1`
 //     )
-//   ).then((data) => data.json())*/
+//   ).then((data) => data.json())

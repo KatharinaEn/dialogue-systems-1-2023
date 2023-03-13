@@ -51,12 +51,21 @@ interface SDSContext {
   ttsAgenda: string;
   azureAuthorizationToken: string;
   audioCtx: any;
+  person: any;
+  confirm: any;
+  deny: any;
+  day: any;
+  time: any;
+  start: any;
+  information: any;
+  type: any;
+  helpIntent: any;
+  count: any;
+  SpeechRecognition: any;
+  SpeechGrammarList: any;
 
   title: any;
   topic: string;
-  day: any; 
-  time: any; 
-  person: any;
 }
 
 type SDSEvent =
