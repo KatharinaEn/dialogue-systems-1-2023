@@ -308,7 +308,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             }),
           },
           {
-            target: ".nomatch",
+            target: ".nomatch1",
           },
         ],
         TIMEOUT: ".prompt",
@@ -323,6 +323,10 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         nomatch: {
           entry: say("Sorry, can you repeat that?"),
+          on: { ENDSPEECH: "ask"},
+        },
+        nomatch1: {
+          entry: say("Please add AM or PM to your time request."),
           on: { ENDSPEECH: "ask"},
         },
       },
