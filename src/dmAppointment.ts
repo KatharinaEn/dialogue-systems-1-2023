@@ -62,6 +62,7 @@ function say(text: string): Action<SDSContext, SDSEvent> {
   }
 };*/
 
+
 const getEntity = (context: SDSContext, entity: string) => {
   console.log('nluResult:');
   console.log(context.nluResult)
@@ -69,31 +70,25 @@ const getEntity = (context: SDSContext, entity: string) => {
   return context.nluResult.prediction.intents[0].category;
 }; 
 
+
+
 const getEntity1 = (context: SDSContext, entity: string) => {
   console.log('nluResult:');
   console.log(context.nluResult);
-  return context.nluResult.prediction.entities[0].text;
+  const entities = context.nluResult.prediction.entities;
+  console.log(entities.length)
+  if (entities.length > 0) {
+    return context.nluResult.prediction.entities[0].text;
+} else {
+  return false;
+}
+};
 
 
   // if (context.nluResult.prediction.entities.length === 0) {
   // } else if (context.nluResult.prediction.entities.length > 0) {
   //   return "meeting type" ;
   // }
-};
-
-
-//if(nluResult.prediction.entities.length > 0) { // do something with nluResult.prediction.entities[0] }
-
-  // lowercase the utterance and remove tailing "."
-  /*let u = context.recResult[0].utterance.toLowerCase().replace(/\.$/g, "");
-  if (u in grammar) {
-    if (entity in grammar[u].entities)
-   {
-      return grammar[u].entities[entity];
-    }
-  }
-};*/
-
 
 
 export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
@@ -187,13 +182,14 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         RECOGNISED: [
           {
             target: "info",
-            cond: (context) => getEntity(context) === "meeting",
+            cond: (context) => getEntity(context) === "meeting" && getEntity1(context) != false,
             actions: assign({
               title: (context) => getEntity1(context, "title"),
             }),
           },
           {
             target: ".nomatch",
+            cond: (context)=> getEntity1(context) === false,
           },
         ],
         TIMEOUT: ".prompt",
