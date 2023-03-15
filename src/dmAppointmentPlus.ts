@@ -71,9 +71,9 @@ const grammar: Grammar = {
 
 function threshold(x) {
   let result;
-  if (x > 0.3) {
+  if (x > 0.6) {
     result = 'proceed';
-  } else if (x > 0.2) {
+  } else if (x > 0.5) {
     result = 'continue';
   } else {
     result = 'Do you want to have this top-ranked recognition hypothesis?';
