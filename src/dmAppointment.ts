@@ -326,7 +326,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           on: { ENDSPEECH: "ask"},
         },
         nomatch1: {
-          entry: say("Please add AM or PM to your time request."),
+          entry: say("Please add AM or PM to your time request the next time."),
           on: { ENDSPEECH: "ask"},
         },
       },
