@@ -63,7 +63,7 @@ function say(text: string): Action<SDSContext, SDSEvent> {
 };*/
 
 
-const getEntity = (context: SDSContext, entity: string) => {
+const getIntent = (context: SDSContext, entity: string) => {
   console.log('nluResult:');
   console.log(context.nluResult)
   /*let u = context.recResult[0].utterance.toLowerCase().replace(/\.$/g, "");*/
@@ -72,7 +72,7 @@ const getEntity = (context: SDSContext, entity: string) => {
 
 
 
-const getEntity1 = (context: SDSContext, entity: string) => {
+const getEntity = (context: SDSContext, entity: string) => {
   console.log('nluResult:');
   console.log(context.nluResult);
   const entities = context.nluResult.prediction.entities;
@@ -111,11 +111,11 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         RECOGNISED: [
           {
             target: "welcome",
-            cond: (context) => getEntity(context) === "create a meeting",
+            cond: (context) => getIntent(context) === "create a meeting",
           },
           {
             target: "who_is_it",
-            cond: (context) => getEntity(context) === "ask_celebrity",
+            cond: (context) => getIntent(context) === "person",
           },
           {
             target: ".nomatch",
@@ -138,23 +138,82 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
       },
     },
     who_is_it: {
-      entry: send((context) => ({
-        type: "SPEAK",
-        value: `${context.person} is a singer`,
-        })),
-      on: { ENDSPEECH: "meeting_X" },
-    },
-    meeting_X: {
+      id:"who_is_it",
       initial: "prompt",
       on: {
         RECOGNISED: [
           {
-            target: "whichday",
-            cond: (context) => getEntity(context) === "who_is_it",
+            target: ".information",
+            actions: assign({type: context => {return context.recResult[0].utterance},
+            }),
+          },
+          {
+            target: ".nomatch",
+          },
+        ],
+        TIMEOUT: ".prompt",
+      },
+      states: {
+        information: {
+          invoke: {
+            id: 'getInformation',
+            src: (context, event) => kbRequest(context.type),
+            onDone: [{
+              target: 'success',
+              cond: (context, event) => event.data.Abstract !== "",
+              actions: assign({ information: (context, event) => event.data })
+            },
+            {
+              target: 'failure',
+            },
+          ],
+            onError: {
+              target: 'failure',
+            }
+          }
+        },
+        success: {
+          entry: send((context) => ({
+            type: "SPEAK",
+            value: `The info I found about this person is as follows: ${context.information.Abstract}`
+          })),
+          on: {ENDSPEECH: "#meeting_who"},
+        },
+        failure: {
+          entry: send((context) => ({
+            type: "SPEAK",
+            value: `Sorry, I don't know who that is. Tell me something I know.`
+          })),
+          on: {ENDSPEECH: "ask"},
+        },
+        prompt: {
+          entry: say("Which celebrity do you want to know more about?"),
+          on: { ENDSPEECH: "ask" },
+        },
+        ask: {
+          id: "who_is_it",
+          entry: send("LISTEN"),
+        },
+        nomatch: {
+          entry: say(
+            "Sorry, I don't know what it is. Tell me something I know."
+          ),
+          on: { ENDSPEECH: "#who_is_it" },
+        },
+      },
+    },
+    meeting_who: {
+      id: "meeting_who",
+      initial: "prompt",
+      on: {
+        RECOGNISED: [
+          {
+            target: "assign_meeting_title",
+            cond: (context) => getIntent(context) === "positive",
           },
           {
             target: "meeting",
-            cond: (context) => getEntity(context) === "negative",
+            cond: (context) => getIntent(context) === "negative",
           },
           {
             target: ".nomatch",
@@ -174,22 +233,30 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           entry: say("Sorry, I don't know what it is. Tell me something I know."),
           on: {ENDSPEECH: "ask"},
         },
+        },
       },
-    },
+        assign_meeting_title: {
+          entry: [
+            say("Okay, let's schedule a meeting."),
+            assign((context) => ({title: `meeting with ${context.type}`}))
+          ],
+          on: { ENDSPEECH: "whichday" },
+         },
     welcome: {
+      id: "welcome",
       initial: "prompt",
       on: {
         RECOGNISED: [
           {
             target: "info",
-            cond: (context) => getEntity(context) === "meeting" && getEntity1(context) != false,
+            cond: (context) => getIntent(context) === "meeting" && getEntity(context) != false,
             actions: assign({
-              title: (context) => getEntity1(context, "title"),
+              title: (context) => getEntity(context, "title"),
             }),
           },
           {
             target: ".nomatch",
-            cond: (context)=> getEntity1(context) === false,
+            cond: (context)=> getEntity(context) === false,
           },
         ],
         TIMEOUT: ".prompt",
@@ -208,7 +275,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           ),
           on: { ENDSPEECH: "ask" },
         },
-      },
+        },
     },
     info: {
       entry: send((context) => ({
@@ -230,9 +297,9 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         RECOGNISED: [
           {
             target: "repeatday",
-            cond: (context) => getEntity(context) === "day_of_meeting",
+            cond: (context) => getIntent(context) === "day_of_meeting",
             actions: assign({
-              day: (context) => getEntity1(context, "day"),
+              day: (context) => getEntity(context, "day"),
             }),
           },
           {
@@ -268,11 +335,11 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         RECOGNISED: [
           {
             target: "meetingtimenotspecific",
-            cond: (context) => getEntity(context) === "positive",
+            cond: (context) => getIntent(context) === "positive",
           },
           {
             target: "meetingtime",
-            cond: (context) => getEntity(context) === "negative",
+            cond: (context) => getIntent(context) === "negative",
           },
           {
             target: ".nomatch",
@@ -302,9 +369,9 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         RECOGNISED: [
           {
             target: "meetingtime_specific",
-            cond: (context) => getEntity(context) === "time_of_meeting",
+            cond: (context) => getIntent(context) === "time_of_meeting",
             actions: assign({
-              time: (context) => getEntity1(context, "time"),
+              time: (context) => getEntity(context, "time"),
             }),
           },
           {
@@ -337,11 +404,11 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           RECOGNISED: [
             {
               target: "created",
-              cond: (context) => getEntity(context) === "positive",
+              cond: (context) => getIntent(context) === "positive",
             },
             {
               target: "welcome",
-              cond: (context) => getEntity(context) === "negative",
+              cond: (context) => getIntent(context) === "negative",
             },
             {
               target: ".nomatch",
@@ -373,11 +440,11 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             RECOGNISED: [
               {
                 target: "created",
-                cond: (context) => getEntity(context) === "positive",
+                cond: (context) => getIntent(context) === "positive",
               },
               {
                 target: "meeting",
-                cond: (context) => getEntity(context) === "negative",
+                cond: (context) => getIntent(context) === "negative",
               },
               {
                 target: ".nomatch",
@@ -410,10 +477,10 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           })),
         },
       },
-};
+    };
     
 
-/*const kbRequest = (text: string) =>
+const kbRequest = (text: string) =>
   fetch(
     new Request(
       `https://cors.eu.org/https://api.duckduckgo.com/?q=${text}&format=json&skip_disambig=1`
